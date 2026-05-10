@@ -82,10 +82,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             'assets/images/backgrounds/splash_bg.jpg',
             fit: BoxFit.cover,
           ),
-          SafeArea(
-            child: Column(
-              children: [
-                Expanded(
+          Column(
+            children: [
+              Expanded(
+                child: SafeArea(
+                  bottom: false,
                   child: PageView.builder(
                     controller: _controller,
                     itemCount: _pages.length,
@@ -93,15 +94,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     itemBuilder: (_, i) => _OnboardingPageView(page: _pages[i]),
                   ),
                 ),
-                Container(
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(24),
-                    ),
+              ),
+              Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(24),
                   ),
-                  padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
+                ),
+                padding: EdgeInsets.fromLTRB(
+                  24,
+                  24,
+                  24,
+                  24 + MediaQuery.of(context).padding.bottom,
+                ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -134,10 +141,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
   }
 }
 

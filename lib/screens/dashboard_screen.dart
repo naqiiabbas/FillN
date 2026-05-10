@@ -20,13 +20,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        bottom: false,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: const [
-              _Header(),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: const [
+            _Header(),
               SizedBox(height: 16),
               _ActionRow(),
               SizedBox(height: 16),
@@ -38,10 +36,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               SizedBox(height: 16),
               _DailyActivityCard(),
               SizedBox(height: 16),
-              _AlertsCard(),
-              SizedBox(height: 24),
-            ],
-          ),
+            _AlertsCard(),
+            SizedBox(height: 24),
+          ],
         ),
       ),
       bottomNavigationBar: _BottomNav(
@@ -65,12 +62,13 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final topPad = MediaQuery.of(context).padding.top;
     return Container(
       decoration: const BoxDecoration(
         color: AppColors.primaryBlue,
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
       ),
-      padding: const EdgeInsets.fromLTRB(32, 16, 32, 24),
+      padding: EdgeInsets.fromLTRB(32, topPad + 16, 32, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -151,7 +149,7 @@ class _Header extends StatelessWidget {
               borderRadius: BorderRadius.circular(14),
               border: Border.all(color: Colors.white, width: 1.2),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 32),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
                 const Icon(Icons.search, color: Colors.white, size: 20),
@@ -236,7 +234,7 @@ class _ActionCard extends StatelessWidget {
         color: color,
         borderRadius: BorderRadius.circular(14),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 32),
+      padding: const EdgeInsets.symmetric(horizontal: 14),
       child: Row(
         children: [
           SvgPicture.asset(
@@ -248,12 +246,14 @@ class _ActionCard extends StatelessWidget {
               BlendMode.srcIn,
             ),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 8),
           Expanded(
             child: Text(
               label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: GoogleFonts.inter(
-                fontSize: 16,
+                fontSize: 15,
                 fontWeight: FontWeight.w600,
                 color: Colors.white,
               ),

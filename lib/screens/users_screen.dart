@@ -128,11 +128,9 @@ class _UsersScreenState extends State<UsersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        bottom: false,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const _UsersHeader(),
               const SizedBox(height: 16),
@@ -172,9 +170,8 @@ class _UsersScreenState extends State<UsersScreen> {
                         child: _BusinessCard(item: b),
                       ),
                     )),
-              const SizedBox(height: 16),
-            ],
-          ),
+          const SizedBox(height: 16),
+        ],
         ),
       ),
       bottomNavigationBar: _UsersBottomNav(
@@ -196,12 +193,13 @@ class _UsersHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final topPad = MediaQuery.of(context).padding.top;
     return Container(
       decoration: const BoxDecoration(
         color: AppColors.primaryBlue,
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
       ),
-      padding: const EdgeInsets.fromLTRB(32, 24, 32, 28),
+      padding: EdgeInsets.fromLTRB(32, topPad + 24, 32, 28),
       child: Row(
         children: [
           Expanded(
