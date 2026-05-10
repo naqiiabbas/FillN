@@ -7,3 +7,7 @@ class AppColors {
   static const Color dotInactive = Color(0xFFD9D9D9);
   static const Color background = Color(0xFFF5F5F5);
 }
+
+class AppSpacing {
+  static const double page = 32;
+}

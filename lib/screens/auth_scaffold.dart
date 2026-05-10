@@ -50,7 +50,7 @@ class AuthScaffold extends StatelessWidget {
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
+                  horizontal: 32,
                   vertical: 24,
                 ),
                 child: Column(

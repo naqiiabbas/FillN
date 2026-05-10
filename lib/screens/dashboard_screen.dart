@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../theme/app_colors.dart';
+import 'users_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -45,7 +46,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       bottomNavigationBar: _BottomNav(
         currentIndex: _navIndex,
-        onTap: (i) => setState(() => _navIndex = i),
+        onTap: (i) {
+          if (i == 1) {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const UsersScreen()),
+            );
+            return;
+          }
+          setState(() => _navIndex = i);
+        },
       ),
     );
   }
@@ -61,7 +70,7 @@ class _Header extends StatelessWidget {
         color: AppColors.primaryBlue,
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
       ),
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+      padding: const EdgeInsets.fromLTRB(32, 16, 32, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -142,7 +151,7 @@ class _Header extends StatelessWidget {
               borderRadius: BorderRadius.circular(14),
               border: Border.all(color: Colors.white, width: 1.2),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 32),
             child: Row(
               children: [
                 const Icon(Icons.search, color: Colors.white, size: 20),
@@ -180,7 +189,7 @@ class _ActionRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 32),
       child: Row(
         children: [
           Expanded(
@@ -227,7 +236,7 @@ class _ActionCard extends StatelessWidget {
         color: color,
         borderRadius: BorderRadius.circular(14),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 32),
       child: Row(
         children: [
           SvgPicture.asset(
@@ -279,7 +288,7 @@ class _StatsGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 32),
       child: Column(
         children: const [
           Row(
@@ -445,7 +454,7 @@ class _NearbyJobsHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+      padding: const EdgeInsets.fromLTRB(32, 8, 32, 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -477,7 +486,7 @@ class _CardShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      margin: const EdgeInsets.symmetric(horizontal: 32),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,

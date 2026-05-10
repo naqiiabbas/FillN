@@ -148,7 +148,7 @@ class _OnboardingPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 32),
       child: Column(
         children: [
           const Spacer(flex: 2),
