@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../theme/app_colors.dart';
+import 'login_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -60,7 +61,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   void _onPrimaryPressed() {
     if (_index == _pages.length - 1) {
-      // TODO: navigate to login / next flow
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+      );
       return;
     }
     _controller.nextPage(
