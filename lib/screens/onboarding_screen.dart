@@ -76,7 +76,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         fit: StackFit.expand,
         children: [
           Image.asset(
-            'assets/images/splash/splash_bg.jpg',
+            'assets/images/backgrounds/splash_bg.jpg',
             fit: BoxFit.cover,
           ),
           SafeArea(
