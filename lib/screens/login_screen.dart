@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../theme/app_colors.dart';
+import 'forgot_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -111,7 +112,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const ForgotPasswordScreen(),
+                            ),
+                          );
+                        },
                         child: Text(
                           'Forgot Password?',
                           style: GoogleFonts.inter(
@@ -131,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           backgroundColor: AppColors.primaryBlue,
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(28),
+                            borderRadius: BorderRadius.circular(14),
                           ),
                           elevation: 0,
                         ),
@@ -306,7 +313,7 @@ class _SocialButton extends StatelessWidget {
           backgroundColor: Colors.white,
           side: const BorderSide(color: Color(0xFFE5E5E5)),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(14),
           ),
         ),
         child: Row(
