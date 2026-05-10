@@ -15,7 +15,7 @@ class FillNAdminApp extends StatelessWidget {
       title: 'FillN Admin',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF2540C9)),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF2853AA)),
         useMaterial3: true,
         scaffoldBackgroundColor: Colors.white,
       ),
