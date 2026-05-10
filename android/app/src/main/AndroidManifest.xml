@@ -1,6 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="fill_n_admin"
+        android:label="FillN Admin"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
