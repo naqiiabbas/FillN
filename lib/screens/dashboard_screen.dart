@@ -7,6 +7,7 @@ import '../theme/app_colors.dart';
 import '../widgets/app_bottom_nav.dart';
 import '../widgets/notification_bell.dart';
 import 'messages_screen.dart';
+import 'urgent_requests_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -153,12 +154,18 @@ class _ActionRow extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          const Expanded(
-            child: _ActionCard(
-              color: Color(0xFFDC2626),
-              iconAsset: 'assets/images/icons/Urgent.svg',
-              label: 'Urgent',
-              count: 3,
+          Expanded(
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const UrgentRequestsScreen()),
+              ),
+              child: const _ActionCard(
+                color: Color(0xFFDC2626),
+                iconAsset: 'assets/images/icons/Urgent.svg',
+                label: 'Urgent',
+                count: 3,
+              ),
             ),
           ),
         ],
