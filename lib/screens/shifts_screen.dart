@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../theme/app_colors.dart';
+import '../widgets/app_bottom_nav.dart';
 import 'shift_details_screen.dart';
 
 enum ShiftStatus { ongoing, upcoming, completed }
@@ -132,19 +133,7 @@ class _ShiftsScreenState extends State<ShiftsScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: _ShiftsBottomNav(
-        currentIndex: 2,
-        onTap: (i) {
-          if (i == 0) {
-            Navigator.of(context).popUntil((r) => r.isFirst);
-            return;
-          }
-          if (i == 1) {
-            Navigator.of(context).pop();
-            return;
-          }
-        },
-      ),
+      bottomNavigationBar: const AppBottomNav(currentIndex: 2),
     );
   }
 }
@@ -504,74 +493,3 @@ class _Footer extends StatelessWidget {
   }
 }
 
-class _ShiftsBottomNav extends StatelessWidget {
-  final int currentIndex;
-  final ValueChanged<int> onTap;
-  const _ShiftsBottomNav({required this.currentIndex, required this.onTap});
-
-  static const _items = <_NavItem>[
-    _NavItem(label: 'Dashboard', icon: Icons.dashboard_outlined),
-    _NavItem(label: 'Users', icon: Icons.people_outline),
-    _NavItem(label: 'Shifts', icon: Icons.access_time),
-    _NavItem(label: 'Payments', icon: Icons.account_balance_wallet_outlined),
-    _NavItem(label: 'Reports', icon: Icons.description_outlined),
-    _NavItem(label: 'Settings', icon: Icons.settings_outlined),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(top: BorderSide(color: Color(0xFFE5E5E5))),
-      ),
-      padding: const EdgeInsets.fromLTRB(8, 10, 8, 10),
-      child: SafeArea(
-        top: false,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            for (int i = 0; i < _items.length; i++)
-              Expanded(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () => onTap(i),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        _items[i].icon,
-                        size: 24,
-                        color: i == currentIndex
-                            ? AppColors.primaryBlue
-                            : AppColors.textPrimary,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        _items[i].label,
-                        style: GoogleFonts.inter(
-                          fontSize: 12,
-                          fontWeight: i == currentIndex
-                              ? FontWeight.w600
-                              : FontWeight.w500,
-                          color: i == currentIndex
-                              ? AppColors.primaryBlue
-                              : AppColors.textPrimary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _NavItem {
-  final String label;
-  final IconData icon;
-  const _NavItem({required this.label, required this.icon});
-}

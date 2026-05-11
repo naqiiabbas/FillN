@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../theme/app_colors.dart';
+import '../widgets/app_bottom_nav.dart';
 import 'contact_business_screen.dart';
 import 'contact_worker_screen.dart';
-import 'shifts_screen.dart';
 
 enum _UserStatus { active, suspended, pending }
 
@@ -46,7 +46,6 @@ class UsersScreen extends StatefulWidget {
 }
 
 class _UsersScreenState extends State<UsersScreen> {
-  int _navIndex = 1;
   int _tab = 0;
 
   static const List<_UserItem> _workers = [
@@ -175,22 +174,7 @@ class _UsersScreenState extends State<UsersScreen> {
         ],
         ),
       ),
-      bottomNavigationBar: _UsersBottomNav(
-        currentIndex: _navIndex,
-        onTap: (i) {
-          if (i == 0) {
-            Navigator.of(context).pop();
-            return;
-          }
-          if (i == 2) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => const ShiftsScreen()),
-            );
-            return;
-          }
-          setState(() => _navIndex = i);
-        },
-      ),
+      bottomNavigationBar: const AppBottomNav(currentIndex: 1),
     );
   }
 }
@@ -598,74 +582,3 @@ class _StatusPill extends StatelessWidget {
   }
 }
 
-class _UsersBottomNav extends StatelessWidget {
-  final int currentIndex;
-  final ValueChanged<int> onTap;
-  const _UsersBottomNav({required this.currentIndex, required this.onTap});
-
-  static const _items = <_NavItem>[
-    _NavItem(label: 'Dashboard', icon: Icons.dashboard_outlined),
-    _NavItem(label: 'Users', icon: Icons.people_outline),
-    _NavItem(label: 'Shifts', icon: Icons.access_time),
-    _NavItem(label: 'Payments', icon: Icons.account_balance_wallet_outlined),
-    _NavItem(label: 'Reports', icon: Icons.description_outlined),
-    _NavItem(label: 'Settings', icon: Icons.settings_outlined),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(top: BorderSide(color: Color(0xFFE5E5E5))),
-      ),
-      padding: const EdgeInsets.fromLTRB(8, 10, 8, 10),
-      child: SafeArea(
-        top: false,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            for (int i = 0; i < _items.length; i++)
-              Expanded(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () => onTap(i),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        _items[i].icon,
-                        size: 24,
-                        color: i == currentIndex
-                            ? AppColors.primaryBlue
-                            : AppColors.textPrimary,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        _items[i].label,
-                        style: GoogleFonts.inter(
-                          fontSize: 12,
-                          fontWeight: i == currentIndex
-                              ? FontWeight.w600
-                              : FontWeight.w500,
-                          color: i == currentIndex
-                              ? AppColors.primaryBlue
-                              : AppColors.textPrimary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _NavItem {
-  final String label;
-  final IconData icon;
-  const _NavItem({required this.label, required this.icon});
-}
