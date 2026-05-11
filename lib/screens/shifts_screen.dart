@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../theme/app_colors.dart';
 import '../widgets/app_bottom_nav.dart';
+import '../widgets/notification_bell.dart';
 import 'shift_details_screen.dart';
 
 enum ShiftStatus { ongoing, upcoming, completed }
@@ -162,45 +163,7 @@ class _Header extends StatelessWidget {
               ),
             ),
           ),
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.18),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.notifications_outlined,
-                  color: Colors.white,
-                  size: 22,
-                ),
-              ),
-              Positioned(
-                top: -2,
-                right: -2,
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFDC2626),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Text(
-                    '2',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.inter(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          const NotificationBell(),
         ],
       ),
     );
