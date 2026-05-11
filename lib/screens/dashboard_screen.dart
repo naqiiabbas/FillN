@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../theme/app_colors.dart';
+import 'payments_screen.dart';
 import 'shifts_screen.dart';
 import 'users_screen.dart';
 
@@ -54,6 +55,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           if (i == 2) {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => const ShiftsScreen()),
+            );
+            return;
+          }
+          if (i == 3) {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const PaymentsScreen()),
             );
             return;
           }
