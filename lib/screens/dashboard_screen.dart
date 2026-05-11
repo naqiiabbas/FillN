@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_colors.dart';
 import '../widgets/app_bottom_nav.dart';
 import '../widgets/notification_bell.dart';
+import 'messages_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -138,15 +139,21 @@ class _ActionRow extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: _ActionCard(
-              color: AppColors.primaryBlue,
-              iconAsset: 'assets/images/icons/messages.svg',
-              label: 'Messages',
-              count: 6,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const MessagesScreen()),
+              ),
+              child: const _ActionCard(
+                color: AppColors.primaryBlue,
+                iconAsset: 'assets/images/icons/messages.svg',
+                label: 'Messages',
+                count: 6,
+              ),
             ),
           ),
-          SizedBox(width: 12),
-          Expanded(
+          const SizedBox(width: 12),
+          const Expanded(
             child: _ActionCard(
               color: Color(0xFFDC2626),
               iconAsset: 'assets/images/icons/Urgent.svg',
