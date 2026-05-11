@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_colors.dart';
 import 'contact_business_screen.dart';
 import 'contact_worker_screen.dart';
+import 'shifts_screen.dart';
 
 enum _UserStatus { active, suspended, pending }
 
@@ -179,6 +180,12 @@ class _UsersScreenState extends State<UsersScreen> {
         onTap: (i) {
           if (i == 0) {
             Navigator.of(context).pop();
+            return;
+          }
+          if (i == 2) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const ShiftsScreen()),
+            );
             return;
           }
           setState(() => _navIndex = i);

@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../theme/app_colors.dart';
+import 'shifts_screen.dart';
 import 'users_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -47,6 +48,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           if (i == 1) {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => const UsersScreen()),
+            );
+            return;
+          }
+          if (i == 2) {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const ShiftsScreen()),
             );
             return;
           }
