@@ -150,6 +150,8 @@ class _ActionRow extends StatelessWidget {
                 iconAsset: 'assets/images/icons/messages.svg',
                 label: 'Messages',
                 count: 6,
+                badgeBg: Color(0xFFDC2626),
+                badgeFg: Colors.white,
               ),
             ),
           ),
@@ -179,12 +181,16 @@ class _ActionCard extends StatelessWidget {
   final String iconAsset;
   final String label;
   final int count;
+  final Color badgeBg;
+  final Color badgeFg;
 
   const _ActionCard({
     required this.color,
     required this.iconAsset,
     required this.label,
     required this.count,
+    this.badgeBg = Colors.white,
+    this.badgeFg = const Color(0xFFDC2626),
   });
 
   @override
@@ -223,8 +229,8 @@ class _ActionCard extends StatelessWidget {
           Container(
             width: 28,
             height: 28,
-            decoration: const BoxDecoration(
-              color: Colors.white,
+            decoration: BoxDecoration(
+              color: badgeBg,
               shape: BoxShape.circle,
             ),
             alignment: Alignment.center,
@@ -233,7 +239,7 @@ class _ActionCard extends StatelessWidget {
               style: GoogleFonts.inter(
                 fontSize: 13,
                 fontWeight: FontWeight.w700,
-                color: color,
+                color: badgeFg,
               ),
             ),
           ),

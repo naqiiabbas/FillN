@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../theme/app_colors.dart';
+import 'chat_screen.dart';
 
 class ContactBusinessScreen extends StatelessWidget {
   final String name;
@@ -594,6 +595,7 @@ class _BottomActions extends StatelessWidget {
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(
                         Icons.warning_amber_rounded,
@@ -601,14 +603,16 @@ class _BottomActions extends StatelessWidget {
                         size: 20,
                       ),
                       const SizedBox(width: 8),
-                      Text(
-                        'Suspend',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.inter(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFFDC2626),
+                      Flexible(
+                        child: Text(
+                          'Suspend',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.inter(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: const Color(0xFFDC2626),
+                          ),
                         ),
                       ),
                     ],
@@ -621,7 +625,22 @@ class _BottomActions extends StatelessWidget {
               child: SizedBox(
                 height: 52,
                 child: OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => ChatScreen(
+                        name: name,
+                        logoColor: AppColors.primaryBlue,
+                        logoText: name
+                            .split(' ')
+                            .where((p) => p.isNotEmpty)
+                            .map((p) => p[0])
+                            .take(2)
+                            .join()
+                            .toUpperCase(),
+                        online: true,
+                      ),
+                    ),
+                  ),
                   style: OutlinedButton.styleFrom(
                     backgroundColor: Colors.white,
                     side: const BorderSide(color: AppColors.primaryBlue),
@@ -631,6 +650,7 @@ class _BottomActions extends StatelessWidget {
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(
                         Icons.chat_bubble_outline,
@@ -638,14 +658,16 @@ class _BottomActions extends StatelessWidget {
                         size: 20,
                       ),
                       const SizedBox(width: 8),
-                      Text(
-                        'Send Message',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.inter(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.primaryBlue,
+                      Flexible(
+                        child: Text(
+                          'Send Message',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.inter(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.primaryBlue,
+                          ),
                         ),
                       ),
                     ],

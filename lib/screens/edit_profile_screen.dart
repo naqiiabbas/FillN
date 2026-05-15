@@ -15,6 +15,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     text: "I'm a platform administrator overseeing the entire staffing operations and ensuring smooth workflow for all users.",
   );
 
+  String _gender = 'Male';
+  String _language = 'English';
+  String _timezone = 'Eastern (EST)';
+
+  static const _genders = ['Male', 'Female', 'Other', 'Prefer not to say'];
+  static const _languages = ['English', 'Spanish', 'French', 'German', 'Mandarin', 'Arabic'];
+  static const _timezones = [
+    'Eastern (EST)',
+    'Central (CST)',
+    'Mountain (MST)',
+    'Pacific (PST)',
+    'GMT',
+    'CET',
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -45,9 +60,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     child: _AvatarCard(),
                   ),
                   const SizedBox(height: 16),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 32),
-                    child: _BasicInfoCard(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                    child: _BasicInfoCard(
+                      gender: _gender,
+                      onGenderChanged: (v) => setState(() => _gender = v),
+                    ),
                   ),
                   const SizedBox(height: 16),
                   const Padding(
@@ -65,9 +83,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     child: _EmergencyContactCard(),
                   ),
                   const SizedBox(height: 16),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 32),
-                    child: _PreferencesCard(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                    child: _PreferencesCard(
+                      language: _language,
+                      timezone: _timezone,
+                      onLanguageChanged: (v) => setState(() => _language = v),
+                      onTimezoneChanged: (v) => setState(() => _timezone = v),
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Padding(
@@ -272,31 +295,87 @@ class _Field extends StatelessWidget {
 
 class _Dropdown extends StatelessWidget {
   final String value;
-  const _Dropdown({required this.value});
+  final List<String> options;
+  final ValueChanged<String> onChanged;
+  const _Dropdown({
+    required this.value,
+    required this.options,
+    required this.onChanged,
+  });
+
+  void _open(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 12),
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: const Color(0xFFE5E5E5),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 8),
+            for (final opt in options)
+              ListTile(
+                title: Text(
+                  opt,
+                  style: GoogleFonts.inter(
+                    fontSize: 15,
+                    fontWeight: opt == value ? FontWeight.w800 : FontWeight.w500,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                trailing: opt == value
+                    ? const Icon(Icons.check, color: AppColors.primaryBlue)
+                    : null,
+                onTap: () {
+                  onChanged(opt);
+                  Navigator.of(context).pop();
+                },
+              ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 46,
-      padding: const EdgeInsets.symmetric(horizontal: 14),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF5F5F4),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFFE5E5E5)),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              value,
-              style: GoogleFonts.inter(
-                fontSize: 15,
-                color: AppColors.textPrimary,
+    return GestureDetector(
+      onTap: () => _open(context),
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        height: 46,
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF5F5F4),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: const Color(0xFFE5E5E5)),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                value,
+                style: GoogleFonts.inter(
+                  fontSize: 15,
+                  color: AppColors.textPrimary,
+                ),
               ),
             ),
-          ),
-          const Icon(Icons.keyboard_arrow_down, color: Color(0xFF9A9A9A)),
-        ],
+            const Icon(Icons.keyboard_arrow_down, color: Color(0xFF9A9A9A)),
+          ],
+        ),
       ),
     );
   }
@@ -361,7 +440,9 @@ class _AvatarCard extends StatelessWidget {
 }
 
 class _BasicInfoCard extends StatelessWidget {
-  const _BasicInfoCard();
+  final String gender;
+  final ValueChanged<String> onGenderChanged;
+  const _BasicInfoCard({required this.gender, required this.onGenderChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -406,10 +487,14 @@ class _BasicInfoCard extends StatelessWidget {
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    _Label(text: 'Gender'),
-                    SizedBox(height: 6),
-                    _Dropdown(value: 'Male'),
+                  children: [
+                    const _Label(text: 'Gender'),
+                    const SizedBox(height: 6),
+                    _Dropdown(
+                      value: gender,
+                      options: _EditProfileScreenState._genders,
+                      onChanged: onGenderChanged,
+                    ),
                   ],
                 ),
               ),
@@ -533,7 +618,7 @@ class _EmergencyContactCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const _SectionTitle(
-            icon: Icons.favorite_border,
+            icon: Icons.phone_outlined,
             iconColor: Color(0xFFDC2626),
             label: 'Emergency Contact',
           ),
@@ -552,7 +637,16 @@ class _EmergencyContactCard extends StatelessWidget {
 }
 
 class _PreferencesCard extends StatelessWidget {
-  const _PreferencesCard();
+  final String language;
+  final String timezone;
+  final ValueChanged<String> onLanguageChanged;
+  final ValueChanged<String> onTimezoneChanged;
+  const _PreferencesCard({
+    required this.language,
+    required this.timezone,
+    required this.onLanguageChanged,
+    required this.onTimezoneChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -567,11 +661,19 @@ class _PreferencesCard extends StatelessWidget {
           const SizedBox(height: 14),
           const _Label(text: 'Language'),
           const SizedBox(height: 6),
-          const _Dropdown(value: 'English'),
+          _Dropdown(
+            value: language,
+            options: _EditProfileScreenState._languages,
+            onChanged: onLanguageChanged,
+          ),
           const SizedBox(height: 12),
           const _Label(text: 'Time Zone'),
           const SizedBox(height: 6),
-          const _Dropdown(value: 'Eastern (EST)'),
+          _Dropdown(
+            value: timezone,
+            options: _EditProfileScreenState._timezones,
+            onChanged: onTimezoneChanged,
+          ),
         ],
       ),
     );
@@ -755,7 +857,7 @@ class _BottomActions extends StatelessWidget {
               child: SizedBox(
                 height: 52,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () => Navigator.of(context).maybePop(),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryBlue,
                     foregroundColor: Colors.white,

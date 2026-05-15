@@ -3,8 +3,35 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../theme/app_colors.dart';
 
-class WithdrawFundsScreen extends StatelessWidget {
+class WithdrawFundsScreen extends StatefulWidget {
   const WithdrawFundsScreen({super.key});
+
+  @override
+  State<WithdrawFundsScreen> createState() => _WithdrawFundsScreenState();
+}
+
+class _WithdrawFundsScreenState extends State<WithdrawFundsScreen> {
+  final _amountController = TextEditingController();
+  String? _bank;
+
+  static const _banks = [
+    'Chase Bank ****4532',
+    'Bank of America ****7821',
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _amountController.addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _amountController.dispose();
+    super.dispose();
+  }
+
+  double get _amount => double.tryParse(_amountController.text) ?? 0;
 
   @override
   Widget build(BuildContext context) {
@@ -27,14 +54,22 @@ class WithdrawFundsScreen extends StatelessWidget {
                     child: _AvailableBalanceCard(),
                   ),
                   const SizedBox(height: 16),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 32),
-                    child: _WithdrawFormCard(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                    child: _WithdrawFormCard(
+                      amountController: _amountController,
+                      bank: _bank,
+                      banks: _banks,
+                      onBankChanged: (v) => setState(() => _bank = v),
+                      onQuickSelect: (amt) => setState(() {
+                        _amountController.text = amt.toStringAsFixed(2);
+                      }),
+                    ),
                   ),
                   const SizedBox(height: 16),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 32),
-                    child: _TransactionDetailsCard(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                    child: _TransactionDetailsCard(amount: _amount),
                   ),
                   const SizedBox(height: 16),
                   const Padding(
@@ -50,6 +85,7 @@ class WithdrawFundsScreen extends StatelessWidget {
             primaryLabel: 'Confirm Withdrawal',
             primaryIcon: Icons.north_east,
             onCancel: () => Navigator.of(context).maybePop(),
+            onPrimary: () => Navigator.of(context).maybePop(),
           ),
         ],
       ),
@@ -95,7 +131,19 @@ class _AvailableBalanceCard extends StatelessWidget {
 }
 
 class _WithdrawFormCard extends StatelessWidget {
-  const _WithdrawFormCard();
+  final TextEditingController amountController;
+  final String? bank;
+  final List<String> banks;
+  final ValueChanged<String> onBankChanged;
+  final ValueChanged<double> onQuickSelect;
+
+  const _WithdrawFormCard({
+    required this.amountController,
+    required this.bank,
+    required this.banks,
+    required this.onBankChanged,
+    required this.onQuickSelect,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -105,11 +153,20 @@ class _WithdrawFormCard extends StatelessWidget {
         children: [
           const _FieldLabel('Withdrawal Amount'),
           const SizedBox(height: 8),
-          const _FilledField(hint: '0.00'),
+          _FilledField(
+            hint: '0.00',
+            controller: amountController,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          ),
           const SizedBox(height: 16),
           const _FieldLabel('Bank Account'),
           const SizedBox(height: 8),
-          const _FilledDropdown(hint: 'Select bank account'),
+          _FilledDropdown(
+            hint: 'Select bank account',
+            value: bank,
+            options: banks,
+            onChanged: onBankChanged,
+          ),
           const SizedBox(height: 16),
           const _FieldLabel('Quick Select'),
           const SizedBox(height: 8),
@@ -117,14 +174,14 @@ class _WithdrawFormCard extends StatelessWidget {
             height: 44,
             child: ListView(
               scrollDirection: Axis.horizontal,
-              children: const [
-                _ChipButton(label: '\$100'),
-                SizedBox(width: 10),
-                _ChipButton(label: '\$500'),
-                SizedBox(width: 10),
-                _ChipButton(label: '\$1000'),
-                SizedBox(width: 10),
-                _ChipButton(label: '\$2000'),
+              children: [
+                _ChipButton(label: '\$100', onTap: () => onQuickSelect(100)),
+                const SizedBox(width: 10),
+                _ChipButton(label: '\$500', onTap: () => onQuickSelect(500)),
+                const SizedBox(width: 10),
+                _ChipButton(label: '\$1000', onTap: () => onQuickSelect(1000)),
+                const SizedBox(width: 10),
+                _ChipButton(label: '\$2000', onTap: () => onQuickSelect(2000)),
               ],
             ),
           ),
@@ -135,10 +192,13 @@ class _WithdrawFormCard extends StatelessWidget {
 }
 
 class _TransactionDetailsCard extends StatelessWidget {
-  const _TransactionDetailsCard();
+  final double amount;
+  const _TransactionDetailsCard({required this.amount});
 
   @override
   Widget build(BuildContext context) {
+    final fee = amount > 0 ? 2.00 : 0.00;
+    final receive = (amount - fee).clamp(0, double.infinity);
     return _CardShell(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,13 +212,19 @@ class _TransactionDetailsCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 14),
-          const _DetailRow(label: 'Withdrawal Amount', value: '\$0.00'),
+          _DetailRow(
+            label: 'Withdrawal Amount',
+            value: '\$${amount.toStringAsFixed(2)}',
+          ),
           const Divider(height: 24, color: Color(0xFFEDEDED)),
-          const _DetailRow(label: 'Processing Fee', value: '\$0.00'),
+          _DetailRow(
+            label: 'Processing Fee',
+            value: '\$${fee.toStringAsFixed(2)}',
+          ),
           const Divider(height: 24, color: Color(0xFFEDEDED)),
-          const _DetailRow(
+          _DetailRow(
             label: "You'll Receive",
-            value: '\$0.00',
+            value: '\$${receive.toStringAsFixed(2)}',
             bold: true,
             valueColor: AppColors.primaryBlue,
           ),
@@ -446,11 +512,20 @@ class _FieldLabel extends StatelessWidget {
 class _FilledField extends StatelessWidget {
   final String hint;
   final String? prefix;
-  const _FilledField({required this.hint, this.prefix});
+  final TextEditingController? controller;
+  final TextInputType? keyboardType;
+  const _FilledField({
+    required this.hint,
+    this.prefix,
+    this.controller,
+    this.keyboardType,
+  });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
+      keyboardType: keyboardType,
       style: GoogleFonts.inter(fontSize: 16, color: AppColors.textPrimary),
       decoration: InputDecoration(
         hintText: hint,
@@ -488,34 +563,96 @@ class _FilledField extends StatelessWidget {
 
 class _FilledDropdown extends StatelessWidget {
   final String hint;
-  const _FilledDropdown({required this.hint});
+  final String? value;
+  final List<String>? options;
+  final ValueChanged<String>? onChanged;
+  const _FilledDropdown({
+    required this.hint,
+    this.value,
+    this.options,
+    this.onChanged,
+  });
+
+  void _open(BuildContext context) {
+    if (options == null || onChanged == null) return;
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 12),
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: const Color(0xFFE5E5E5),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 8),
+            for (final opt in options!)
+              ListTile(
+                title: Text(
+                  opt,
+                  style: GoogleFonts.inter(
+                    fontSize: 15,
+                    fontWeight: opt == value ? FontWeight.w800 : FontWeight.w500,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                trailing: opt == value
+                    ? const Icon(Icons.check, color: AppColors.primaryBlue)
+                    : null,
+                onTap: () {
+                  onChanged!(opt);
+                  Navigator.of(context).pop();
+                },
+              ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 52,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF5F5F4),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE5E5E5)),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              hint,
-              style: GoogleFonts.inter(
-                fontSize: 16,
-                color: AppColors.textSecondary,
+    final display = value ?? hint;
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => _open(context),
+      child: Container(
+        height: 52,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF5F5F4),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFFE5E5E5)),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                display,
+                style: GoogleFonts.inter(
+                  fontSize: 16,
+                  color: value == null
+                      ? AppColors.textSecondary
+                      : AppColors.textPrimary,
+                ),
               ),
             ),
-          ),
-          const Icon(
-            Icons.keyboard_arrow_down,
-            color: Color(0xFF9A9A9A),
-          ),
-        ],
+            const Icon(
+              Icons.keyboard_arrow_down,
+              color: Color(0xFF9A9A9A),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -523,24 +660,29 @@ class _FilledDropdown extends StatelessWidget {
 
 class _ChipButton extends StatelessWidget {
   final String label;
-  const _ChipButton({required this.label});
+  final VoidCallback? onTap;
+  const _ChipButton({required this.label, this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 18),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE5E5E5)),
-      ),
-      child: Text(
-        label,
-        style: GoogleFonts.inter(
-          fontSize: 15,
-          fontWeight: FontWeight.w600,
-          color: AppColors.textPrimary,
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 18),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFFE5E5E5)),
+        ),
+        child: Text(
+          label,
+          style: GoogleFonts.inter(
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textPrimary,
+          ),
         ),
       ),
     );
@@ -644,10 +786,12 @@ class _BottomActions extends StatelessWidget {
   final String primaryLabel;
   final IconData primaryIcon;
   final VoidCallback onCancel;
+  final VoidCallback? onPrimary;
   const _BottomActions({
     required this.primaryLabel,
     required this.primaryIcon,
     required this.onCancel,
+    this.onPrimary,
   });
 
   @override
@@ -692,7 +836,7 @@ class _BottomActions extends StatelessWidget {
               child: SizedBox(
                 height: 52,
                 child: ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: onPrimary ?? () {},
                   icon: Icon(primaryIcon, size: 18, color: Colors.white),
                   label: Text(
                     primaryLabel,
